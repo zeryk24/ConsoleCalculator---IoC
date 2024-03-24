@@ -3,28 +3,28 @@ using Calculator.Application.Add;
 using Calculator.Application.Services;
 using Calculator.Application.Subtract;
 using Calculator.Domain;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Calculator.Presentation;
 
-public class RequestFacade(ICalculatorService calculatorService) : IRequestFacade
+public class RequestFacade(CalculatorRequestHandlerFactory factory) : IRequestFacade
 {
 
     public ResultFormulaDto SendRequest(int x, int y, char sign)
     {
-        var factory = new CalculatorRequestHandlerFactory(calculatorService);
-        IRequestHandler handler = factory.CreateHandler('+');
+        IRequestHandler handler = factory.CreateHandler(sign);
         return handler.Handle(x,y);
     }
 }
 
-public class CalculatorRequestHandlerFactory(ICalculatorService calculatorService)
+public class CalculatorRequestHandlerFactory(IServiceProvider serviceProvider)
 {
     public IRequestHandler CreateHandler(char sign)
     {
         return sign switch
         {
-            '+' => new AddRequestHandler(calculatorService),
-            '-' => new SubtractRequestHandler(calculatorService),
+            '+' => serviceProvider.GetRequiredService<AddRequestHandler>(),
+            '-' => serviceProvider.GetRequiredService<SubtractRequestHandler>(),
             _ => throw new NotImplementedException(),
         };
     }

@@ -1,6 +1,21 @@
-﻿using Calculator.Domain;
+﻿using Calculator.Application.Add;
+using Calculator.Application.Services;
+using Calculator.Application.Subtract;
+using Calculator.Domain;
 using Calculator.Infrastructure.Services;
 using Calculator.Presentation;
+using Microsoft.Extensions.DependencyInjection;
+
+var services = new ServiceCollection();
+
+services.AddTransient<ICalculatorService, CalculatorService>();
+services.AddTransient<RequestFacade>();
+services.AddTransient<CalculatorRequestHandlerFactory>();
+services.AddTransient<AddRequestHandler>();
+services.AddTransient<SubtractRequestHandler>();
+
+var provider = services.BuildServiceProvider();
+
 
 string headline = @"
      a88888b.          dP                   dP            dP                     
@@ -32,9 +47,7 @@ if (!int.TryParse(Console.ReadLine(), out y))
     return;
 }
 
-
-var calculatorService = new CalculatorService();
-var requestFacade = new RequestFacade(calculatorService);
+var requestFacade = provider.GetService<RequestFacade>();
 
 var result = requestFacade.SendRequest(x, y, sign);
 
