@@ -8,6 +8,7 @@ public static class PresentationInstaller
     {
         services.AddTransient<RequestFacade>();
         services.AddTransient<CalculatorRequestHandlerFactory>();
+        services.AddTransient<App>();
 
         return services;
     }
