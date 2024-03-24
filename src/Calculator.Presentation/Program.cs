@@ -1,18 +1,18 @@
-﻿using Calculator.Application.Add;
+﻿using Calculator.Application;
+using Calculator.Application.Add;
 using Calculator.Application.Services;
 using Calculator.Application.Subtract;
 using Calculator.Domain;
+using Calculator.Infrastructure;
 using Calculator.Infrastructure.Services;
 using Calculator.Presentation;
 using Microsoft.Extensions.DependencyInjection;
 
 var services = new ServiceCollection();
 
-services.AddTransient<ICalculatorService, CalculatorService>();
-services.AddTransient<RequestFacade>();
-services.AddTransient<CalculatorRequestHandlerFactory>();
-services.AddTransient<AddRequestHandler>();
-services.AddTransient<SubtractRequestHandler>();
+services.InstallInfrastructure();
+services.InstallApplication();
+services.InstallPresentation();
 
 var provider = services.BuildServiceProvider();
 
